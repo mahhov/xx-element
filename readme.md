@@ -32,7 +32,7 @@ Convenience class for creating custom HTML elements.
 ```
 
 ```js
-const XElement = require('xx-element');
+const {XElement} = require('xx-element');
 const template = require('fs').readFileSync(`${__dirname}/toggle.html`, 'utf8');
 
 customElements.define('x-toggle', class extends XElement {
@@ -70,8 +70,20 @@ customElements.define('x-toggle', class extends XElement {
 
 ## Helpers
 
-The XElement base class provides 3 helper functions:
+The `XElement` base class provides 3 helper functions:
 
 - `$(selector)` invokes to `querySelector` on the XElement's `shadowRoot`.
 - `$$(selector)` invokes to `querySelectorAll` on the XElement's `shadowRoot`.
 - `clearChildren()` and `XElement.clearChildren(el)` clear the children elements of the XElement or an arbitrary element respectively.
+
+## importUtils
+
+`importUtils` provides a function to help fetch the custom element names and templates. To use, simply replace first 3 lines from the above example to:
+
+```js
+const {importUtil, XElement} = require('xx-element');
+const {template, name} = importUtil(__filename);
+
+customElements.define(name, class extends XElement  {
+    ...
+```
