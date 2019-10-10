@@ -52,9 +52,8 @@ class XElement extends HTMLElement {
 		return this.shadowRoot.querySelectorAll(query);
 	}
 
-	clearChildren() {
-		while (this.firstChild)
-			this.removeChild(this.firstChild);
+	clearChildren(query) {
+		XElement.clearChildren(this.$(query));
 	}
 
 	static clearChildren(element) {
