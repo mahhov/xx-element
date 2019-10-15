@@ -61,6 +61,10 @@ class XElement extends HTMLElement {
 			element.removeChild(element.firstChild);
 	}
 
+	emit(eventName, detail) {
+		this.dispatchEvent(new CustomEvent(eventName, {detail}))
+	}
+
 	static propToAttribName_(propName) {
 		return propName.replace(/[A-Z]/g, a => `-${a.toLowerCase()}`);
 	}
