@@ -61,8 +61,8 @@ class XElement extends HTMLElement {
 			element.removeChild(element.firstChild);
 	}
 
-	emit(eventName, detail) {
-		this.dispatchEvent(new CustomEvent(eventName, {detail}))
+	emit(eventName, detail, otherEventParams) {
+		this.dispatchEvent(new CustomEvent(eventName, {detail, ...otherEventParams}))
 	}
 
 	static propToAttribName_(propName) {

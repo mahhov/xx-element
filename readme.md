@@ -75,7 +75,7 @@ The `XElement` base class provides 3 helper functions:
 - `$(selector)` invokes to `querySelector` on the XElement's `shadowRoot`.
 - `$$(selector)` invokes to `querySelectorAll` on the XElement's `shadowRoot`.
 - `clearChildren(selector)` and `XElement.clearChildren(element)` clear the children elements of the specified element.
-- `emit(eventName, detail)` constructs a `CustomEvent` and invokes `dispatchEvent` on the XElement.
+- `emit(eventName, detail, otherEventParams)` constructs a `CustomEvent` and invokes `dispatchEvent` on the XElement.
 
 ## importUtils
 
