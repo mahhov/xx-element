@@ -32,10 +32,10 @@ Convenience class for creating custom HTML elements.
 ```
 
 ```js
-const {XElement} = require('xx-element');
-const template = require('fs').readFileSync(`${__dirname}/toggle.html`, 'utf8');
+const {XElement, importUtil} = require('xx-element');
+const {template, name} = importUtil(__filename);
 
-customElements.define('x-toggle', class extends XElement {
+customElements.define(name, class extends XElement {
 	static get attributeTypes() {
 		return {title: false, checked: true};
 	}
