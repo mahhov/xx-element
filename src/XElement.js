@@ -20,17 +20,24 @@ class XElement extends HTMLElement {
 		this.shadowRoot.innerHTML = this.constructor.htmlTemplate;
 
 		let properties = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this));
-		Object.entries(this.constructor.attributeTypes).forEach(([propName, boolean]) => {
+		Object.entries(this.constructor.attributeTypes).forEach(([propName, {boolean, allowRedundantAssignment}]) => {
 			let attribName = XElement.propToAttribName_(propName);
 			Object.defineProperty(this, XElement.setterName_(propName), properties[propName] || {set: () => 0});
 			Object.defineProperty(this, propName, boolean ? {
 				get: () => this.hasAttribute(attribName),
-				set: value => value ?
-					this.setAttribute(attribName, '') :
-					this.removeAttribute(attribName)
+				set: value => {
+					if (allowRedundantAssignment || !value === this.hasAttribute(attribName))
+						if (value)
+							this.setAttribute(attribName, '');
+						else
+							this.removeAttribute(attribName);
+				}
 			} : {
 				get: () => this.getAttribute(attribName),
-				set: value => this.setAttribute(attribName, value)
+				set: value => {
+					if (allowRedundantAssignment || value !== this.getAttribute(attribName))
+						this.setAttribute(attribName, value);
+				}
 			});
 		});
 

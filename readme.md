@@ -37,7 +37,7 @@ const {template, name} = importUtil(__filename);
 
 customElements.define(name, class extends XElement {
 	static get attributeTypes() {
-		return {title: false, checked: true};
+		return {title: {}, checked: {boolean:true}};
 	}
 
 	static get htmlTemplate() {
@@ -65,8 +65,33 @@ customElements.define(name, class extends XElement {
 ## Usage
 
 - Create a class extending XElement.
-- Override the static getter methods `{...[attribute: isBoolean]} attributeTypes` and `string htmlTemplate`.
-- Add setter methods for each attribute.
+- Override the static getter `attributeTypes` and add setter methods for each bound attribute (see below).
+- Override the static getter `htmlTemplate`; it should return a string representation of the element's `HTML`.
+
+## Attribute bindings
+
+### setters
+
+For each attribute to be bound, specify a setter that will be invoked when the attribute is changed. If omitted, a no-op setter will be used.
+
+### `static get attributeTypes`
+
+Returns `{attribute: {boolean: true|false, allowRedundantAssignment: true|false}, ...}`. Keys indicate which attributes will be bound. Values indicate the binding options. Setting `boolean: true` indicates a boolean attribute. Setting `allowRedundantAssignment: true` indicates re-assigning the current value to the binding will not short-circuit and propagate as if a new value was being assigned. 
+
+### Example
+
+```
+    static get attributeTypes() {
+        return {title: {}, checked: {boolean:true}};
+    }
+    ...
+    
+    set title(value) {
+        this.$('#title').textContent = value;
+    }
+```
+
+`myElement.title = 'yes'` or `<my-elemnet title="yes">` will both update the `title` attribute and call the defined setter. `myElement.title` will return the current value.
 
 ## Helpers
 
