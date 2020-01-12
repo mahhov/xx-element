@@ -45,10 +45,7 @@ class XElement extends HTMLElement {
 
 	attributeChangedCallback(attribName, oldValue, newValue) {
 		let propName = XElement.attribToPropName_(attribName);
-		if (this.constructor.attributeTypes[propName])
-			this[XElement.setterName_(propName)] = this.hasAttribute(attribName);
-		else
-			this[XElement.setterName_(propName)] = newValue;
+		this[XElement.setterName_(propName)] = this[propName];
 	}
 
 	$(query) {
