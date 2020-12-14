@@ -1,3 +1,10 @@
+const PropertyTypes = {
+	string: 'string',
+	boolean: 'boolean',
+	number: 'number',
+	object: 'object',
+};
+
 class XElement extends HTMLElement {
 	static get attributeTypes() {
 		return {};
@@ -20,25 +27,51 @@ class XElement extends HTMLElement {
 		this.shadowRoot.innerHTML = this.constructor.htmlTemplate;
 
 		let properties = Object.getOwnPropertyDescriptors(Object.getPrototypeOf(this));
-		Object.entries(this.constructor.attributeTypes).forEach(([propName, {boolean, allowRedundantAssignment}]) => {
+		Object.entries(this.constructor.attributeTypes).forEach(([propName, {type, allowRedundantAssignment}]) => {
 			let attribName = XElement.propToAttribName_(propName);
 			Object.defineProperty(this, XElement.setterName_(propName), properties[propName] || {set: () => 0});
-			Object.defineProperty(this, propName, boolean ? {
-				get: () => this.hasAttribute(attribName),
-				set: value => {
-					if (allowRedundantAssignment || !value === this.hasAttribute(attribName))
-						if (value)
-							this.setAttribute(attribName, '');
-						else
-							this.removeAttribute(attribName);
-				}
-			} : {
-				get: () => this.getAttribute(attribName),
-				set: value => {
-					if (allowRedundantAssignment || value !== this.getAttribute(attribName))
-						this.setAttribute(attribName, value);
-				}
-			});
+			switch (type) {
+				case PropertyTypes.boolean:
+					Object.defineProperty(this, propName, {
+						get: () => this.hasAttribute(attribName),
+						set: value => {
+							if (allowRedundantAssignment || !value === this.hasAttribute(attribName))
+								if (value)
+									this.setAttribute(attribName, '');
+								else
+									this.removeAttribute(attribName);
+						}
+					});
+					break;
+				case PropertyTypes.number:
+					Object.defineProperty(this, propName, {
+						get: () => Number(this.getAttribute(attribName)),
+						set: value => {
+							if (allowRedundantAssignment || value !== this.getAttribute(attribName))
+								this.setAttribute(attribName, Number(value));
+						}
+					});
+					break;
+				case PropertyTypes.object:
+					Object.defineProperty(this, propName, {
+						get: () => this.objectAttributes[attribName],
+						set: value => {
+							if (allowRedundantAssignment || value !== this.objectAttributes[attribName])
+								this.objectAttributes[attribName] = value;
+						}
+					});
+					break;
+				case PropertyTypes.string:
+				default:
+					Object.defineProperty(this, propName, {
+						get: () => this.getAttribute(attribName),
+						set: value => {
+							if (allowRedundantAssignment || value !== this.getAttribute(attribName))
+								this.setAttribute(attribName, value);
+						}
+					});
+					break;
+			}
 		});
 
 	}
@@ -81,5 +114,7 @@ class XElement extends HTMLElement {
 		return `xel2_${propName}_`;
 	}
 }
+
+XElement.PropertyTypes = PropertyTypes;
 
 module.exports = XElement;
