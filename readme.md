@@ -37,7 +37,7 @@ const {template, name} = importUtil(__filename);
 
 customElements.define(name, class extends XElement {
 	static get attributeTypes() {
-		return {title: {}, checked: {boolean:true}};
+		return {title: {}, checked: {type: XElement.propertyTypes.boolean}};
 	}
 
 	static get htmlTemplate() {
@@ -72,17 +72,17 @@ customElements.define(name, class extends XElement {
 
 ### setters
 
-For each attribute to be bound, specify a setter that will be invoked when the attribute is changed. If omitted, a no-op setter will be used.
+For each attribute to be bound, specify a setter that will be invoked when the attribute changes. If omitted, a no-op setter will be used.
 
 ### `static get attributeTypes`
 
-Returns `{attribute: {boolean: true|false, allowRedundantAssignment: true|false}, ...}`. Keys indicate which attributes will be bound. Values indicate the binding options. Setting `boolean: true` indicates a boolean attribute. Setting `allowRedundantAssignment: true` indicates re-assigning the current value to the binding will not short-circuit and propagate as if a new value was being assigned. 
+Returns `{attribute: {type: XElement.propertyTypes.string|boolean|number|object, allowRedundantAssignment: true|false}, ...}`. Keys indicate which attributes will be bound. Values indicate the binding options. Setting `boolean: true` indicates a boolean attribute. Setting `allowRedundantAssignment: true` indicates re-assigning the current value to the binding will not short-circuit and propagate as if a new value was being assigned. 
 
 ### Example
 
 ```
     static get attributeTypes() {
-        return {title: {}, checked: {boolean:true}};
+        return {title: {}, checked: {type: Xelement.propertyTypes.boolean}};
     }
     ...
     
