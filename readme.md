@@ -37,7 +37,7 @@ const {template, name} = importUtil(__filename);
 
 customElements.define(name, class extends XElement {
 	static get attributeTypes() {
-		return {title: {}, checked: {type: XElement.propertyTypes.boolean}};
+		return {title: {}, checked: {type: XElement.PropertyTypes.boolean}};
 	}
 
 	static get htmlTemplate() {
@@ -76,13 +76,13 @@ For each attribute to be bound, specify a setter that will be invoked when the a
 
 ### `static get attributeTypes`
 
-Returns `{attribute: {type: XElement.propertyTypes.string|boolean|number|object, allowRedundantAssignment: true|false}, ...}`. Keys indicate which attributes will be bound. Values indicate the binding options. Setting `boolean: true` indicates a boolean attribute. Setting `allowRedundantAssignment: true` indicates re-assigning the current value to the binding will not short-circuit and propagate as if a new value was being assigned. 
+Returns `{attribute: {type: XElement.PropertyTypes.string|boolean|number|object, allowRedundantAssignment: true|false}, ...}`. Keys indicate which attributes will be bound. Values indicate the binding options. Setting `boolean: true` indicates a boolean attribute. Setting `allowRedundantAssignment: true` indicates re-assigning the current value to the binding will not short-circuit and propagate as if a new value was being assigned. 
 
 ### Example
 
 ```
     static get attributeTypes() {
-        return {title: {}, checked: {type: Xelement.propertyTypes.boolean}};
+        return {title: {}, checked: {type: Xelement.PropertyTypes.boolean}};
     }
     ...
     
@@ -101,15 +101,3 @@ The `XElement` base class provides 3 helper functions:
 - `$$(selector)` invokes to `querySelectorAll` on the XElement's `shadowRoot`.
 - `clearChildren(selector)` and `XElement.clearChildren(element)` clear the children elements of the specified element.
 - `emit(eventName, detail, otherEventParams)` constructs a `CustomEvent` and invokes `dispatchEvent` on the XElement.
-
-## importUtils
-
-`importUtils` provides a function to help fetch the custom element names and templates. To use, simply replace first 3 lines from the above example to:
-
-```js
-const {importUtil, XElement} = require('xx-element');
-const {template, name} = importUtil(__filename);
-
-customElements.define(name, class extends XElement  {
-    ...
-```

@@ -35,30 +35,34 @@ class XElement extends HTMLElement {
 					Object.defineProperty(this, propName, {
 						get: () => this.hasAttribute(attribName),
 						set: value => {
-							if (allowRedundantAssignment || !value === this.hasAttribute(attribName))
+							if (allowRedundantAssignment || value !== this[propName])
 								if (value)
 									this.setAttribute(attribName, '');
 								else
 									this.removeAttribute(attribName);
-						}
+						},
 					});
 					break;
 				case PropertyTypes.number:
 					Object.defineProperty(this, propName, {
 						get: () => Number(this.getAttribute(attribName)),
 						set: value => {
-							if (allowRedundantAssignment || value !== this.getAttribute(attribName))
+							if (allowRedundantAssignment || value !== this[propName])
 								this.setAttribute(attribName, Number(value));
-						}
+						},
 					});
 					break;
 				case PropertyTypes.object:
 					Object.defineProperty(this, propName, {
-						get: () => this.objectAttributes[attribName],
+						get: () => this[XElement.objectAttributesName]?.[attribName],
 						set: value => {
-							if (allowRedundantAssignment || value !== this.objectAttributes[attribName])
-								this.objectAttributes[attribName] = value;
-						}
+							if (allowRedundantAssignment || value !== this[propName]) {
+								if (!this[XElement.objectAttributesName])
+									this[XElement.objectAttributesName] = {};
+								this[XElement.objectAttributesName][attribName] = value;
+								this.setAttribute(attribName, value);
+							}
+						},
 					});
 					break;
 				case PropertyTypes.string:
@@ -66,14 +70,13 @@ class XElement extends HTMLElement {
 					Object.defineProperty(this, propName, {
 						get: () => this.getAttribute(attribName),
 						set: value => {
-							if (allowRedundantAssignment || value !== this.getAttribute(attribName))
+							if (allowRedundantAssignment || value !== this[propName])
 								this.setAttribute(attribName, value);
-						}
+						},
 					});
 					break;
 			}
 		});
-
 	}
 
 	attributeChangedCallback(attribName, oldValue, newValue) {
@@ -112,6 +115,10 @@ class XElement extends HTMLElement {
 
 	static setterName_(propName) {
 		return `xel2_${propName}_`;
+	}
+
+	static get objectAttributesName() {
+		return 'xel2_objectAttributes_';
 	}
 }
 
